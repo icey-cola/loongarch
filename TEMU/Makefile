@@ -36,6 +36,7 @@ export	BUILD_DIR
 # ********************
 
 $(BUILD_DIR)$(TEMU_TARGET): 
+	$(MAKE) -C mips_sc
 	@mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) -o $@ $(SRCS) $(LDFLAGS)
 

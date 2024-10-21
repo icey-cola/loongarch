@@ -3,15 +3,20 @@
 #define ENTRY_START 0xbfc00000
 
 char *exec_file;
+uint8_t *hw_mem;
+CPU_state cpu;
 
 void init_regex();
 void init_wp_pool();
 void init_ddr3();
 
 FILE *log_fp = NULL;
+FILE *golden_trace_fp = NULL;
 
 static void init_log() {
 	log_fp = fopen("log.txt", "w");
+	golden_trace_fp = fopen("golden_trace.txt", "w");
+	Assert(golden_trace_fp, "Can not open 'golden_trace.txt'");
 	Assert(log_fp, "Can not open 'log.txt'");
 }
 

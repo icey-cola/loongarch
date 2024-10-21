@@ -14,3 +14,21 @@ void display_reg() {
         printf("%s\t\t0x%08x\t\t%d\n", "$pc", cpu.pc, cpu.pc);
 }
 
+
+uint32_t get_reg_val(const char *s, bool *success) {
+	int i;
+	*success = true;
+	for(i = 0; i < 32; i ++) {
+		if(strcmp(regfile[i], s) == 0) {
+			return reg_w(i);
+		}
+	}
+
+
+	if(strcmp("$pc", s) == 0) {
+		return cpu.pc;
+	}
+
+	*success = false;
+	return 0;
+}

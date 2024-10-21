@@ -3,6 +3,7 @@
 
 #define DEBUG
 #define LOG_FILE
+#define GOLDEN_TRACE_FILE
 
 #include "debug.h"
 #include "macro.h"

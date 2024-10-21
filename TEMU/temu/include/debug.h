@@ -5,11 +5,18 @@
 #include <assert.h>
 
 extern FILE* log_fp;
+extern FILE* golden_trace_fp;
 
 #ifdef LOG_FILE
 #	define Log_write(format, ...) fprintf(log_fp, format, ## __VA_ARGS__), fflush(log_fp)
 #else
 #	define Log_write(format, ...)
+#endif
+
+#ifdef GOLDEN_TRACE_FILE
+#	define Trace_write(format, ...) fprintf(golden_trace_fp, format, ## __VA_ARGS__), fflush(golden_trace_fp)
+#else
+#	define Trace_write(format, ...)
 #endif
 
 #define Log(format, ...) \
@@ -19,6 +26,12 @@ extern FILE* log_fp;
 		fflush(stdout); \
 		Log_write("[%s,%d,%s] " format "\n", \
 				__FILE__, __LINE__, __func__, ## __VA_ARGS__); \
+	} while(0)
+
+#define Trace(format, ...) \
+	do { \
+		Trace_write(format, \
+				## __VA_ARGS__); \
 	} while(0)
 
 #define Assert(cond, ...) \
