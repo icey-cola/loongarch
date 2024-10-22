@@ -43,20 +43,16 @@ static int cmd_help(char *args);
 //单步调试
 static int cmd_si(char* args)
 {	
-	
-
 	char *arg = strtok(NULL, " ");
-	int i=1 ;
-
+	int i = 1;
 	if (arg != NULL)
 	{
 		int step = atoi(arg);
-		if(step<1)
-		{
+		if(step<1) {
 			fprintf(stderr, "usage: n must be greater than 1\n");
-					return -1;
+			return -1;
 		}
-		else{
+		else {
 		sscanf(arg, "%d", &i);
 		}
 	}
@@ -178,13 +174,11 @@ static int cmd_d(char *args)
 	return 0;
 }
 
-
-
-		static struct
-		{
-			char *name;
-			char *description;
-			int (*handler)(char *);
+static struct
+{
+	char *name;
+	char *description;
+	int (*handler)(char *);
 } cmd_table [] = {
 	{ "help", "Display informations about all supported commands", cmd_help },
 	{ "c", "Continue the execution of the program", cmd_c },

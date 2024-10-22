@@ -3,5 +3,8 @@
 
 make_helper(lui);
 make_helper(ori);
+make_helper(andi);
+make_helper(ori);
+make_helper(xori);
 
 #endif

@@ -17,11 +17,13 @@ char asm_buf[128];
 
 void print_bin_instr(uint32_t pc) {
 	int i;
-	int l = sprintf(asm_buf, "%8x:   ", pc);
-	for(i = 3; i >= 0; i --) {
-		l += sprintf(asm_buf + l, "%02x ", instr_fetch(pc + i, 1));
+	if(temu_state != END) {
+		int l = sprintf(asm_buf, "%8x:   ", pc);
+		for(i = 3; i >= 0; i --) {
+			l += sprintf(asm_buf + l, "%02x ", instr_fetch(pc + i, 1));
+		}
+		sprintf(asm_buf + l, "%*.s", 8, "");
 	}
-	sprintf(asm_buf + l, "%*.s", 8, "");
 }
 
 /* Simulate how the MiniMIPS32 CPU works. */
@@ -60,7 +62,7 @@ void cpu_exec(volatile uint32_t n) {
 		print_bin_instr(pc_temp);
 		strcat(asm_buf, assembly);
 		Log_write("%s\n", asm_buf);
-		if(n_temp < MAX_INSTR_TO_PRINT) {
+		if(n_temp < MAX_INSTR_TO_PRINT || temu_state == RUNNING) { // 
 			printf("%s\n", asm_buf);
 		}
 #endif
