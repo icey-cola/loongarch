@@ -6,7 +6,7 @@
  * This is useful when you use the `si' command.
  * You can modify this value as you want.
  */
-#define MAX_INSTR_TO_PRINT 10
+#define MAX_INSTR_TO_PRINT 100
 
 int temu_state = STOP;
 
@@ -62,7 +62,7 @@ void cpu_exec(volatile uint32_t n) {
 		print_bin_instr(pc_temp);
 		strcat(asm_buf, assembly);
 		Log_write("%s\n", asm_buf);
-		if(n_temp < MAX_INSTR_TO_PRINT || temu_state == RUNNING) { // 
+		if(n_temp < MAX_INSTR_TO_PRINT && temu_state == RUNNING) { // 
 			printf("%s\n", asm_buf);
 		}
 #endif

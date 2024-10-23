@@ -11,5 +11,17 @@ make_helper(srav);
 make_helper(sra);
 make_helper(srlv);
 make_helper(srl);
+make_helper(add);
+make_helper(addu);
+make_helper(sub);
+make_helper(subu);
+make_helper(slt);
+make_helper(sltu);
+make_helper(div);
+make_helper(divu);
+make_helper(mult);
+make_helper(multu);
+make_helper(jr);
+make_helper(jalr);
 
 #endif

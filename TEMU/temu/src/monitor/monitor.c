@@ -42,32 +42,33 @@ void init_monitor(int argc, char *argv[]) {
 	welcome();
 }
 
-static void load_entry() {
-	int ret;
+static void load_entry(const char* instFilePath, const char* dataFilePath) {
+    int ret;
+    // 加载指令文件
+    FILE *fp = fopen(instFilePath, "rb");
+    Assert(fp, "Can not open '%s'", instFilePath);
+    fseek(fp, 0, SEEK_END);
+    size_t file_size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+    ret = fread((void *)(hw_mem + (ENTRY_START & 0x1fffffff)), file_size, 1, fp);
+    assert(ret == 1);
+    fclose(fp); // 关闭文件
 
-	FILE *fp = fopen("inst.bin", "rb");
-	Assert(fp, "Can not open 'inst.bin'");
-	fseek(fp, 0, SEEK_END);
-	size_t file_size = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
-	ret = fread((void *)(hw_mem + (ENTRY_START & 0x1fffffff)), file_size, 1, fp);  // load .text segment to memory address 0x1fc00000
-	assert(ret == 1);
-
-	fp = fopen("data.bin", "rb");
-	Assert(fp, "Can not open 'data.bin'");
-	fseek(fp, 0, SEEK_END);
-	file_size = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
-	ret = fread((void *)(hw_mem), file_size, 1, fp);			// load .data segment to memory address 0x00000000
-
-	fclose(fp);
+    // 加载数据文件
+    fp = fopen(dataFilePath, "rb");
+    Assert(fp, "Can not open '%s'", dataFilePath);
+    fseek(fp, 0, SEEK_END);
+    file_size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+    ret = fread((void *)(hw_mem), file_size, 1, fp); // load .data segment to memory address 0x00000000
+    fclose(fp); // 关闭文件
 }
 
-void restart() {
+void restart(const char* instFilePath, const char* dataFilePath) {
 	/* Perform some initialization to restart a program */
 
 	/* Read the entry code into memory. */
-	load_entry();
+	load_entry(instFilePath, dataFilePath);
 
 	/* Set the initial instruction pointer. */
 	cpu.pc = ENTRY_START;
