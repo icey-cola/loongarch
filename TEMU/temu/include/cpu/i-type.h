@@ -19,7 +19,14 @@ make_helper(bgtz);
 make_helper(blez);
 make_helper(jalr);
 
-
+make_helper(lb);
+make_helper(lbu);
+make_helper(lh);
+make_helper(lhu);
+make_helper(lw);
+make_helper(sb);
+make_helper(sh);
+make_helper(sw);
 
 
 #endif

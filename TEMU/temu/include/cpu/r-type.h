@@ -23,5 +23,9 @@ make_helper(mult);
 make_helper(multu);
 make_helper(jr);
 make_helper(jalr);
+make_helper(mfhi);
+make_helper(mflo);
+make_helper(mthi);
+make_helper(mtlo);
 
 #endif

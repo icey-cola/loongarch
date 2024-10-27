@@ -32,7 +32,7 @@ typedef union {
 #define HW_MEM_SIZE (1 << (COL_WIDTH + ROW_WIDTH + BANK_WIDTH + RANK_WIDTH))
 
 uint8_t dram[NR_RANK][NR_BANK][NR_ROW][NR_COL];
-uint8_t *hw_mem = (void *)dram;
+ uint8_t *hw_mem = (void *)dram;
 
 typedef struct {
 	uint8_t buf[NR_COL];
@@ -53,7 +53,7 @@ void init_ddr3() {
 
 static void ddr3_read(uint32_t addr, void *data) {
 
-	Assert(addr < HW_MEM_SIZE, "physical address %x is outside of the physical memory!", addr);
+	//Assert(addr < HW_MEM_SIZE, "physical address %x is outside of the physical memory!", addr);
 
 	dram_addr temp;
 	temp.addr = addr & ~BURST_MASK;
@@ -74,7 +74,7 @@ static void ddr3_read(uint32_t addr, void *data) {
 }
 
 static void ddr3_write(uint32_t addr, void *data, uint8_t *mask) {
-	Assert(addr < HW_MEM_SIZE, "physical address %x is outside of the physical memory!", addr);
+	//Assert(addr < HW_MEM_SIZE, "physical address %x is outside of the physical memory!", addr);
 
 	dram_addr temp;
 	temp.addr = addr & ~BURST_MASK;

@@ -171,6 +171,7 @@ uint32_t get_reg_val(const char *, bool *);
 
 //计算表达式的值
 static uint32_t eval(int s, int e, bool *success) {
+	
 	if(s > e) {
 		
 		*success = false;

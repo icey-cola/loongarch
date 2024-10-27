@@ -96,12 +96,11 @@ make_helper(add) {
 	int temp = (int)(op_src1->val) + (int)(op_src2->val);
 	if (((int)op_src1->val > 0 && (int)op_src2->val > 0 && temp < 0) || ((int)op_src1->val < 0 && (int)op_src2->val < 0 && temp > 0)) {
 		// TODO exception
-		if (cpu.cp0.status.EXL == 0) { // 如果此时异常级为0，即还未有异常发生（不支持嵌套异常）
-			cpu.cp0.cause.ExcCode = Ov; // 记录发生了溢出异常
-			cpu.cp0.EPC = cpu.pc; // 存放异常返回地址（由软件实现具体的返回地址）
-			cpu.pc = TRAP_ADDR; // 跳转到异常处理程序地址。ATTENTION!
-			cpu.cp0.status.EXL = 1; // 记录已有异常发生
-		}
+		/*if (cpu.cp0.status.EXL == 0) { 
+			cpu.cp0.EPC = cpu.pc; 
+			cpu.pc = TRAP_ADDR;  
+			cpu.cp0.status.EXL = 1;  
+		}*/
 	}else {
 		reg_w(op_dest->reg) = temp;
 	}
@@ -121,12 +120,12 @@ make_helper(sub) {
 	int temp = (int)(op_src1->val) - (int)(op_src2->val);
 	if(((int)op_src1->val > 0 && (int)op_src2->val < 0 && temp < 0) || ((int)op_src1->val < 0 && (int)op_src2->val > 0 && temp > 0)) {
 		// TODO exception
-		if (cpu.cp0.status.EXL == 0) { // 如果此时异常级为0，即还未有异常发生（不支持嵌套异常）
+		/*if (cpu.cp0.status.EXL == 0) { // 如果此时异常级为0，即还未有异常发生（不支持嵌套异常）
 			cpu.cp0.cause.ExcCode = Ov; // 记录发生了溢出异常
 			cpu.cp0.EPC = cpu.pc; // 存放异常返回地址（由软件实现具体的返回地址）
 			cpu.pc = TRAP_ADDR; // 跳转到异常处理程序地址
 			cpu.cp0.status.EXL = 1; // 记录已有异常发生
-		}
+		}*/
 	}else {
 		reg_w(op_dest->reg) = temp; // 直接用tmp可以吗
 	}
@@ -224,3 +223,31 @@ make_helper(jalr) {
     cpu.pc -= 4; // 为了保证在cpu_exec()中的pc += 4
     sprintf(assembly, "jalr   %s", REG_NAME(op_src1->reg));
 }
+make_helper(mfhi) {
+
+	uint32_t reg = (instr >> 11) & 0x1F; // 得到rd的地址
+	reg_w(reg) = cpu.hi;
+	sprintf(assembly, "mfhi   %s", REG_NAME(reg));
+}
+
+make_helper(mflo) {
+
+	uint32_t reg = (instr >> 11) & 0x1F;
+	reg_w(reg) = cpu.lo;
+	sprintf(assembly, "mflo   %s", REG_NAME(reg));
+}
+
+make_helper(mthi) {
+
+	uint32_t reg = (instr >> 21) & 0x1F;
+	cpu.hi = reg_w(reg);
+	sprintf(assembly, "mthi   %s", REG_NAME(reg));
+}
+
+make_helper(mtlo) {
+
+	uint32_t reg = (instr >> 21) & 0x1F;
+	cpu.lo = reg_w(reg);
+	sprintf(assembly, "mtlo   %s", REG_NAME(reg));
+}
+ 

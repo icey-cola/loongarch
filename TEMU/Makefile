@@ -15,8 +15,11 @@ DEBUG := false
 
 # Compilation flags
 CC := gcc
-CFLAGS := -I$(INCLUDE_DIR) -I$(INCLUDE_DIR)/cpu -I$(INCLUDE_DIR)/memory -I$(INCLUDE_DIR)/monitor -Wall -Werror
-LDFLAGS := -lreadline
+CFLAGS := -I$(INCLUDE_DIR) -I$(INCLUDE_DIR)/cpu -I$(INCLUDE_DIR)/memory -I$(INCLUDE_DIR)/monitor -Wall -Werror -fcommon
+
+# 添加 GTK 的编译和链接选项
+CXXFLAGS += $(shell pkg-config --cflags gtk+-3.0)
+LDFLAGS := -lreadline $(shell pkg-config --libs gtk+-3.0)
 
 # Files to be compiled
 SRCS := $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/memory/*.c) $(wildcard $(SRC_DIR)/cpu/*.c) $(wildcard $(SRC_DIR)/monitor/*.c)
@@ -27,18 +30,18 @@ ifeq ($(DEBUG), true)
 CFLAGS += -g
 endif
 
-export	INCLUDE_DIR
-export	SRC_DIR
-export	BUILD_DIR
+export INCLUDE_DIR
+export SRC_DIR
+export BUILD_DIR
 
 # ********************
 # Rules of Compilation
 # ********************
 
-$(BUILD_DIR)$(TEMU_TARGET): 
+$(BUILD_DIR)$(TEMU_TARGET):
 	$(MAKE) -C mips_sc
 	@mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) -o $@ $(SRCS) $(LDFLAGS)
+	$(CC) $(CFLAGS) $(CXXFLAGS) -o $@ $(SRCS) $(LDFLAGS)
 
 run: $(BUILD_DIR)$(TEMU_TARGET)
 	@./$(BUILD_DIR)$(TEMU_TARGET) $(USER_PROGRAM)
@@ -51,4 +54,3 @@ clean:
 	rm -f -r ./mips_sc/build
 	rm -f log.txt
 	rm -f *.bin
-

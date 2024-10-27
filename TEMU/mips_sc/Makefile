@@ -24,6 +24,7 @@ CFLAGS := -mips1 -EL
 ifeq ($(DEBUG), true)
 CFLAGS += -g
 endif
+ 
 
 OBJECTS := $(TESTCASE_BUILD_DIR)$(USER_PROGRAM).o
 
