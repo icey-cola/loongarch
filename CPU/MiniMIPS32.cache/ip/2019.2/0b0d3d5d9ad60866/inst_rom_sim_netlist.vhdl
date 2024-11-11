@@ -1,11 +1,11 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
--- Date        : Sun Nov 10 21:44:11 2024
+-- Date        : Sun Nov 10 18:32:47 2024
 -- Host        : Legion-Singer running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim -rename_top decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix -prefix
---               decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_ data_ram_sim_netlist.vhdl
--- Design      : data_ram
+--               decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_ inst_rom_sim_netlist.vhdl
+-- Design      : inst_rom
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
 -- Device      : xc7k325tffg900-2
@@ -16,18 +16,14 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_prim_wrapper_init is
   port (
-    douta : out STD_LOGIC_VECTOR ( 15 downto 0 );
+    douta : out STD_LOGIC_VECTOR ( 17 downto 0 );
     clka : in STD_LOGIC;
     ena : in STD_LOGIC;
-    addra : in STD_LOGIC_VECTOR ( 10 downto 0 );
-    dina : in STD_LOGIC_VECTOR ( 15 downto 0 );
-    wea : in STD_LOGIC_VECTOR ( 1 downto 0 )
+    addra : in STD_LOGIC_VECTOR ( 10 downto 0 )
   );
 end decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_prim_wrapper_init;
 
 architecture STRUCTURE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_prim_wrapper_init is
-  signal \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_70\ : STD_LOGIC;
-  signal \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_71\ : STD_LOGIC;
   signal \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_CASCADEOUTA_UNCONNECTED\ : STD_LOGIC;
   signal \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_CASCADEOUTB_UNCONNECTED\ : STD_LOGIC;
   signal \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_DBITERR_UNCONNECTED\ : STD_LOGIC;
@@ -47,7 +43,7 @@ begin
       DOB_REG => 0,
       EN_ECC_READ => false,
       EN_ECC_WRITE => false,
-      INITP_00 => X"0000000000000000000000000000000000000000000000000000000000000000",
+      INITP_00 => X"0000000000000000000000000000000000000000000000000000000000000015",
       INITP_01 => X"0000000000000000000000000000000000000000000000000000000000000000",
       INITP_02 => X"0000000000000000000000000000000000000000000000000000000000000000",
       INITP_03 => X"0000000000000000000000000000000000000000000000000000000000000000",
@@ -63,7 +59,7 @@ begin
       INITP_0D => X"0000000000000000000000000000000000000000000000000000000000000000",
       INITP_0E => X"0000000000000000000000000000000000000000000000000000000000000000",
       INITP_0F => X"0000000000000000000000000000000000000000000000000000000000000000",
-      INIT_00 => X"0000000000000000000000000000000000000000000000000000000000000000",
+      INIT_00 => X"000000000000000000000000000000000000000000000000004A200020002000",
       INIT_01 => X"0000000000000000000000000000000000000000000000000000000000000000",
       INIT_02 => X"0000000000000000000000000000000000000000000000000000000000000000",
       INIT_03 => X"0000000000000000000000000000000000000000000000000000000000000000",
@@ -231,17 +227,17 @@ begin
       CLKARDCLK => clka,
       CLKBWRCLK => clka,
       DBITERR => \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_DBITERR_UNCONNECTED\,
-      DIADI(31 downto 16) => B"0000000000000000",
-      DIADI(15 downto 0) => dina(15 downto 0),
+      DIADI(31 downto 0) => B"00000000000000000000000000000000",
       DIBDI(31 downto 0) => B"00000000000000000000000000000000",
       DIPADIP(3 downto 0) => B"0000",
       DIPBDIP(3 downto 0) => B"0000",
       DOADO(31 downto 16) => \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_DOADO_UNCONNECTED\(31 downto 16),
-      DOADO(15 downto 0) => douta(15 downto 0),
+      DOADO(15 downto 8) => douta(16 downto 9),
+      DOADO(7 downto 0) => douta(7 downto 0),
       DOBDO(31 downto 0) => \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_DOBDO_UNCONNECTED\(31 downto 0),
       DOPADOP(3 downto 2) => \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_DOPADOP_UNCONNECTED\(3 downto 2),
-      DOPADOP(1) => \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_70\,
-      DOPADOP(0) => \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_71\,
+      DOPADOP(1) => douta(17),
+      DOPADOP(0) => douta(8),
       DOPBDOP(3 downto 0) => \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_DOPBDOP_UNCONNECTED\(3 downto 0),
       ECCPARITY(7 downto 0) => \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_ECCPARITY_UNCONNECTED\(7 downto 0),
       ENARDEN => ena,
@@ -256,8 +252,7 @@ begin
       RSTREGARSTREG => '0',
       RSTREGB => '0',
       SBITERR => \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_SBITERR_UNCONNECTED\,
-      WEA(3 downto 2) => wea(1 downto 0),
-      WEA(1 downto 0) => wea(1 downto 0),
+      WEA(3 downto 0) => B"0000",
       WEBWE(7 downto 0) => B"00000000"
     );
 end STRUCTURE;
@@ -267,18 +262,18 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity \decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_prim_wrapper_init__parameterized0\ is
   port (
-    douta : out STD_LOGIC_VECTOR ( 15 downto 0 );
+    douta : out STD_LOGIC_VECTOR ( 13 downto 0 );
     clka : in STD_LOGIC;
     ena : in STD_LOGIC;
-    addra : in STD_LOGIC_VECTOR ( 10 downto 0 );
-    dina : in STD_LOGIC_VECTOR ( 15 downto 0 );
-    wea : in STD_LOGIC_VECTOR ( 1 downto 0 )
+    addra : in STD_LOGIC_VECTOR ( 10 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
   attribute ORIG_REF_NAME of \decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_prim_wrapper_init__parameterized0\ : entity is "blk_mem_gen_prim_wrapper_init";
 end \decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_prim_wrapper_init__parameterized0\;
 
 architecture STRUCTURE of \decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_prim_wrapper_init__parameterized0\ is
+  signal \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_20\ : STD_LOGIC;
+  signal \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_28\ : STD_LOGIC;
   signal \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_70\ : STD_LOGIC;
   signal \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_71\ : STD_LOGIC;
   signal \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_CASCADEOUTA_UNCONNECTED\ : STD_LOGIC;
@@ -316,7 +311,7 @@ begin
       INITP_0D => X"0000000000000000000000000000000000000000000000000000000000000000",
       INITP_0E => X"0000000000000000000000000000000000000000000000000000000000000000",
       INITP_0F => X"0000000000000000000000000000000000000000000000000000000000000000",
-      INIT_00 => X"0000000000000000000000000000000000000000000000000000000000000000",
+      INIT_00 => X"0000000000000000000000000000000000000000000000000000104C124A1208",
       INIT_01 => X"0000000000000000000000000000000000000000000000000000000000000000",
       INIT_02 => X"0000000000000000000000000000000000000000000000000000000000000000",
       INIT_03 => X"0000000000000000000000000000000000000000000000000000000000000000",
@@ -484,13 +479,15 @@ begin
       CLKARDCLK => clka,
       CLKBWRCLK => clka,
       DBITERR => \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_DBITERR_UNCONNECTED\,
-      DIADI(31 downto 16) => B"0000000000000000",
-      DIADI(15 downto 0) => dina(15 downto 0),
+      DIADI(31 downto 0) => B"00000000000000000000000000000000",
       DIBDI(31 downto 0) => B"00000000000000000000000000000000",
       DIPADIP(3 downto 0) => B"0000",
       DIPBDIP(3 downto 0) => B"0000",
       DOADO(31 downto 16) => \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_DOADO_UNCONNECTED\(31 downto 16),
-      DOADO(15 downto 0) => douta(15 downto 0),
+      DOADO(15) => \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_20\,
+      DOADO(14 downto 8) => douta(13 downto 7),
+      DOADO(7) => \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_28\,
+      DOADO(6 downto 0) => douta(6 downto 0),
       DOBDO(31 downto 0) => \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_DOBDO_UNCONNECTED\(31 downto 0),
       DOPADOP(3 downto 2) => \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_DOPADOP_UNCONNECTED\(3 downto 2),
       DOPADOP(1) => \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_70\,
@@ -509,8 +506,7 @@ begin
       RSTREGARSTREG => '0',
       RSTREGB => '0',
       SBITERR => \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_SBITERR_UNCONNECTED\,
-      WEA(3 downto 2) => wea(1 downto 0),
-      WEA(1 downto 0) => wea(1 downto 0),
+      WEA(3 downto 0) => B"0000",
       WEBWE(7 downto 0) => B"00000000"
     );
 end STRUCTURE;
@@ -520,12 +516,10 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_prim_width is
   port (
-    douta : out STD_LOGIC_VECTOR ( 15 downto 0 );
+    douta : out STD_LOGIC_VECTOR ( 17 downto 0 );
     clka : in STD_LOGIC;
     ena : in STD_LOGIC;
-    addra : in STD_LOGIC_VECTOR ( 10 downto 0 );
-    dina : in STD_LOGIC_VECTOR ( 15 downto 0 );
-    wea : in STD_LOGIC_VECTOR ( 1 downto 0 )
+    addra : in STD_LOGIC_VECTOR ( 10 downto 0 )
   );
 end decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_prim_width;
 
@@ -535,10 +529,8 @@ begin
      port map (
       addra(10 downto 0) => addra(10 downto 0),
       clka => clka,
-      dina(15 downto 0) => dina(15 downto 0),
-      douta(15 downto 0) => douta(15 downto 0),
-      ena => ena,
-      wea(1 downto 0) => wea(1 downto 0)
+      douta(17 downto 0) => douta(17 downto 0),
+      ena => ena
     );
 end STRUCTURE;
 library IEEE;
@@ -547,12 +539,10 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity \decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_prim_width__parameterized0\ is
   port (
-    douta : out STD_LOGIC_VECTOR ( 15 downto 0 );
+    douta : out STD_LOGIC_VECTOR ( 13 downto 0 );
     clka : in STD_LOGIC;
     ena : in STD_LOGIC;
-    addra : in STD_LOGIC_VECTOR ( 10 downto 0 );
-    dina : in STD_LOGIC_VECTOR ( 15 downto 0 );
-    wea : in STD_LOGIC_VECTOR ( 1 downto 0 )
+    addra : in STD_LOGIC_VECTOR ( 10 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
   attribute ORIG_REF_NAME of \decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_prim_width__parameterized0\ : entity is "blk_mem_gen_prim_width";
@@ -564,10 +554,8 @@ begin
      port map (
       addra(10 downto 0) => addra(10 downto 0),
       clka => clka,
-      dina(15 downto 0) => dina(15 downto 0),
-      douta(15 downto 0) => douta(15 downto 0),
-      ena => ena,
-      wea(1 downto 0) => wea(1 downto 0)
+      douta(13 downto 0) => douta(13 downto 0),
+      ena => ena
     );
 end STRUCTURE;
 library IEEE;
@@ -579,9 +567,7 @@ entity decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_generic_cstr is
     douta : out STD_LOGIC_VECTOR ( 31 downto 0 );
     clka : in STD_LOGIC;
     ena : in STD_LOGIC;
-    addra : in STD_LOGIC_VECTOR ( 10 downto 0 );
-    dina : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    wea : in STD_LOGIC_VECTOR ( 3 downto 0 )
+    addra : in STD_LOGIC_VECTOR ( 10 downto 0 )
   );
 end decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_generic_cstr;
 
@@ -591,19 +577,15 @@ begin
      port map (
       addra(10 downto 0) => addra(10 downto 0),
       clka => clka,
-      dina(15 downto 0) => dina(15 downto 0),
-      douta(15 downto 0) => douta(15 downto 0),
-      ena => ena,
-      wea(1 downto 0) => wea(1 downto 0)
+      douta(17 downto 0) => douta(17 downto 0),
+      ena => ena
     );
 \ramloop[1].ram.r\: entity work.\decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_prim_width__parameterized0\
      port map (
       addra(10 downto 0) => addra(10 downto 0),
       clka => clka,
-      dina(15 downto 0) => dina(31 downto 16),
-      douta(15 downto 0) => douta(31 downto 16),
-      ena => ena,
-      wea(1 downto 0) => wea(3 downto 2)
+      douta(13 downto 0) => douta(31 downto 18),
+      ena => ena
     );
 end STRUCTURE;
 library IEEE;
@@ -615,9 +597,7 @@ entity decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_top is
     douta : out STD_LOGIC_VECTOR ( 31 downto 0 );
     clka : in STD_LOGIC;
     ena : in STD_LOGIC;
-    addra : in STD_LOGIC_VECTOR ( 10 downto 0 );
-    dina : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    wea : in STD_LOGIC_VECTOR ( 3 downto 0 )
+    addra : in STD_LOGIC_VECTOR ( 10 downto 0 )
   );
 end decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_top;
 
@@ -627,10 +607,8 @@ begin
      port map (
       addra(10 downto 0) => addra(10 downto 0),
       clka => clka,
-      dina(31 downto 0) => dina(31 downto 0),
       douta(31 downto 0) => douta(31 downto 0),
-      ena => ena,
-      wea(3 downto 0) => wea(3 downto 0)
+      ena => ena
     );
 end STRUCTURE;
 library IEEE;
@@ -642,9 +620,7 @@ entity decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4_synth is
     douta : out STD_LOGIC_VECTOR ( 31 downto 0 );
     clka : in STD_LOGIC;
     ena : in STD_LOGIC;
-    addra : in STD_LOGIC_VECTOR ( 10 downto 0 );
-    dina : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    wea : in STD_LOGIC_VECTOR ( 3 downto 0 )
+    addra : in STD_LOGIC_VECTOR ( 10 downto 0 )
   );
 end decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4_synth;
 
@@ -654,10 +630,8 @@ begin
      port map (
       addra(10 downto 0) => addra(10 downto 0),
       clka => clka,
-      dina(31 downto 0) => dina(31 downto 0),
       douta(31 downto 0) => douta(31 downto 0),
-      ena => ena,
-      wea(3 downto 0) => wea(3 downto 0)
+      ena => ena
     );
 end STRUCTURE;
 library IEEE;
@@ -670,7 +644,7 @@ entity decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 is
     rsta : in STD_LOGIC;
     ena : in STD_LOGIC;
     regcea : in STD_LOGIC;
-    wea : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    wea : in STD_LOGIC_VECTOR ( 0 to 0 );
     addra : in STD_LOGIC_VECTOR ( 10 downto 0 );
     dina : in STD_LOGIC_VECTOR ( 31 downto 0 );
     douta : out STD_LOGIC_VECTOR ( 31 downto 0 );
@@ -678,7 +652,7 @@ entity decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 is
     rstb : in STD_LOGIC;
     enb : in STD_LOGIC;
     regceb : in STD_LOGIC;
-    web : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    web : in STD_LOGIC_VECTOR ( 0 to 0 );
     addrb : in STD_LOGIC_VECTOR ( 10 downto 0 );
     dinb : in STD_LOGIC_VECTOR ( 31 downto 0 );
     doutb : out STD_LOGIC_VECTOR ( 31 downto 0 );
@@ -703,7 +677,7 @@ entity decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 is
     s_axi_awvalid : in STD_LOGIC;
     s_axi_awready : out STD_LOGIC;
     s_axi_wdata : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    s_axi_wstrb : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    s_axi_wstrb : in STD_LOGIC_VECTOR ( 0 to 0 );
     s_axi_wlast : in STD_LOGIC;
     s_axi_wvalid : in STD_LOGIC;
     s_axi_wready : out STD_LOGIC;
@@ -743,7 +717,7 @@ entity decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 is
   attribute C_AXI_TYPE : integer;
   attribute C_AXI_TYPE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 1;
   attribute C_BYTE_SIZE : integer;
-  attribute C_BYTE_SIZE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 8;
+  attribute C_BYTE_SIZE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 9;
   attribute C_COMMON_CLK : integer;
   attribute C_COMMON_CLK of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_COUNT_18K_BRAM : string;
@@ -777,7 +751,7 @@ entity decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 is
   attribute C_EN_SLEEP_PIN : integer;
   attribute C_EN_SLEEP_PIN of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_EST_POWER_SUMMARY : string;
-  attribute C_EST_POWER_SUMMARY of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is "Estimated Power for IP     :     5.3746 mW";
+  attribute C_EST_POWER_SUMMARY of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is "Estimated Power for IP     :     4.8711 mW";
   attribute C_FAMILY : string;
   attribute C_FAMILY of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is "kintex7";
   attribute C_HAS_AXI_ID : integer;
@@ -813,15 +787,15 @@ entity decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 is
   attribute C_INITB_VAL : string;
   attribute C_INITB_VAL of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is "0";
   attribute C_INIT_FILE : string;
-  attribute C_INIT_FILE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is "data_ram.mem";
+  attribute C_INIT_FILE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is "inst_rom.mem";
   attribute C_INIT_FILE_NAME : string;
-  attribute C_INIT_FILE_NAME of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is "no_coe_file_loaded";
+  attribute C_INIT_FILE_NAME of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is "inst_rom.mif";
   attribute C_INTERFACE_TYPE : integer;
   attribute C_INTERFACE_TYPE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_LOAD_INIT_FILE : integer;
-  attribute C_LOAD_INIT_FILE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 0;
+  attribute C_LOAD_INIT_FILE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 1;
   attribute C_MEM_TYPE : integer;
-  attribute C_MEM_TYPE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 0;
+  attribute C_MEM_TYPE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 3;
   attribute C_MUX_PIPELINE_STAGES : integer;
   attribute C_MUX_PIPELINE_STAGES of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_PRIM_TYPE : integer;
@@ -851,9 +825,9 @@ entity decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 is
   attribute C_USE_BRAM_BLOCK : integer;
   attribute C_USE_BRAM_BLOCK of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_USE_BYTE_WEA : integer;
-  attribute C_USE_BYTE_WEA of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 1;
+  attribute C_USE_BYTE_WEA of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_USE_BYTE_WEB : integer;
-  attribute C_USE_BYTE_WEB of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 1;
+  attribute C_USE_BYTE_WEB of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_USE_DEFAULT_DATA : integer;
   attribute C_USE_DEFAULT_DATA of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 1;
   attribute C_USE_ECC : integer;
@@ -863,9 +837,9 @@ entity decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 is
   attribute C_USE_URAM : integer;
   attribute C_USE_URAM of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_WEA_WIDTH : integer;
-  attribute C_WEA_WIDTH of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 4;
+  attribute C_WEA_WIDTH of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 1;
   attribute C_WEB_WIDTH : integer;
-  attribute C_WEB_WIDTH of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 4;
+  attribute C_WEB_WIDTH of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 1;
   attribute C_WRITE_DEPTH_A : integer;
   attribute C_WRITE_DEPTH_A of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4 : entity is 2048;
   attribute C_WRITE_DEPTH_B : integer;
@@ -1005,10 +979,8 @@ inst_blk_mem_gen: entity work.decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_
      port map (
       addra(10 downto 0) => addra(10 downto 0),
       clka => clka,
-      dina(31 downto 0) => dina(31 downto 0),
       douta(31 downto 0) => douta(31 downto 0),
-      ena => ena,
-      wea(3 downto 0) => wea(3 downto 0)
+      ena => ena
     );
 end STRUCTURE;
 library IEEE;
@@ -1019,15 +991,13 @@ entity decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix is
   port (
     clka : in STD_LOGIC;
     ena : in STD_LOGIC;
-    wea : in STD_LOGIC_VECTOR ( 3 downto 0 );
     addra : in STD_LOGIC_VECTOR ( 10 downto 0 );
-    dina : in STD_LOGIC_VECTOR ( 31 downto 0 );
     douta : out STD_LOGIC_VECTOR ( 31 downto 0 )
   );
   attribute NotValidForBitStream : boolean;
   attribute NotValidForBitStream of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix : entity is true;
   attribute CHECK_LICENSE_TYPE : string;
-  attribute CHECK_LICENSE_TYPE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix : entity is "data_ram,blk_mem_gen_v8_4_4,{}";
+  attribute CHECK_LICENSE_TYPE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix : entity is "inst_rom,blk_mem_gen_v8_4_4,{}";
   attribute downgradeipidentifiedwarnings : string;
   attribute downgradeipidentifiedwarnings of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix : entity is "yes";
   attribute x_core_info : string;
@@ -1068,7 +1038,7 @@ architecture STRUCTURE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix is
   attribute C_AXI_TYPE : integer;
   attribute C_AXI_TYPE of U0 : label is 1;
   attribute C_BYTE_SIZE : integer;
-  attribute C_BYTE_SIZE of U0 : label is 8;
+  attribute C_BYTE_SIZE of U0 : label is 9;
   attribute C_COMMON_CLK : integer;
   attribute C_COMMON_CLK of U0 : label is 0;
   attribute C_COUNT_18K_BRAM : string;
@@ -1102,7 +1072,7 @@ architecture STRUCTURE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix is
   attribute C_EN_SLEEP_PIN : integer;
   attribute C_EN_SLEEP_PIN of U0 : label is 0;
   attribute C_EST_POWER_SUMMARY : string;
-  attribute C_EST_POWER_SUMMARY of U0 : label is "Estimated Power for IP     :     5.3746 mW";
+  attribute C_EST_POWER_SUMMARY of U0 : label is "Estimated Power for IP     :     4.8711 mW";
   attribute C_FAMILY : string;
   attribute C_FAMILY of U0 : label is "kintex7";
   attribute C_HAS_AXI_ID : integer;
@@ -1138,15 +1108,15 @@ architecture STRUCTURE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix is
   attribute C_INITB_VAL : string;
   attribute C_INITB_VAL of U0 : label is "0";
   attribute C_INIT_FILE : string;
-  attribute C_INIT_FILE of U0 : label is "data_ram.mem";
+  attribute C_INIT_FILE of U0 : label is "inst_rom.mem";
   attribute C_INIT_FILE_NAME : string;
-  attribute C_INIT_FILE_NAME of U0 : label is "no_coe_file_loaded";
+  attribute C_INIT_FILE_NAME of U0 : label is "inst_rom.mif";
   attribute C_INTERFACE_TYPE : integer;
   attribute C_INTERFACE_TYPE of U0 : label is 0;
   attribute C_LOAD_INIT_FILE : integer;
-  attribute C_LOAD_INIT_FILE of U0 : label is 0;
+  attribute C_LOAD_INIT_FILE of U0 : label is 1;
   attribute C_MEM_TYPE : integer;
-  attribute C_MEM_TYPE of U0 : label is 0;
+  attribute C_MEM_TYPE of U0 : label is 3;
   attribute C_MUX_PIPELINE_STAGES : integer;
   attribute C_MUX_PIPELINE_STAGES of U0 : label is 0;
   attribute C_PRIM_TYPE : integer;
@@ -1176,9 +1146,9 @@ architecture STRUCTURE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix is
   attribute C_USE_BRAM_BLOCK : integer;
   attribute C_USE_BRAM_BLOCK of U0 : label is 0;
   attribute C_USE_BYTE_WEA : integer;
-  attribute C_USE_BYTE_WEA of U0 : label is 1;
+  attribute C_USE_BYTE_WEA of U0 : label is 0;
   attribute C_USE_BYTE_WEB : integer;
-  attribute C_USE_BYTE_WEB of U0 : label is 1;
+  attribute C_USE_BYTE_WEB of U0 : label is 0;
   attribute C_USE_DEFAULT_DATA : integer;
   attribute C_USE_DEFAULT_DATA of U0 : label is 1;
   attribute C_USE_ECC : integer;
@@ -1188,9 +1158,9 @@ architecture STRUCTURE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix is
   attribute C_USE_URAM : integer;
   attribute C_USE_URAM of U0 : label is 0;
   attribute C_WEA_WIDTH : integer;
-  attribute C_WEA_WIDTH of U0 : label is 4;
+  attribute C_WEA_WIDTH of U0 : label is 1;
   attribute C_WEB_WIDTH : integer;
-  attribute C_WEB_WIDTH of U0 : label is 4;
+  attribute C_WEB_WIDTH of U0 : label is 1;
   attribute C_WRITE_DEPTH_A : integer;
   attribute C_WRITE_DEPTH_A of U0 : label is 2048;
   attribute C_WRITE_DEPTH_B : integer;
@@ -1212,9 +1182,7 @@ architecture STRUCTURE of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix is
   attribute x_interface_parameter of clka : signal is "XIL_INTERFACENAME BRAM_PORTA, MEM_SIZE 8192, MEM_WIDTH 32, MEM_ECC NONE, MASTER_TYPE OTHER, READ_LATENCY 1";
   attribute x_interface_info of ena : signal is "xilinx.com:interface:bram:1.0 BRAM_PORTA EN";
   attribute x_interface_info of addra : signal is "xilinx.com:interface:bram:1.0 BRAM_PORTA ADDR";
-  attribute x_interface_info of dina : signal is "xilinx.com:interface:bram:1.0 BRAM_PORTA DIN";
   attribute x_interface_info of douta : signal is "xilinx.com:interface:bram:1.0 BRAM_PORTA DOUT";
-  attribute x_interface_info of wea : signal is "xilinx.com:interface:bram:1.0 BRAM_PORTA WE";
 begin
 U0: entity work.decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4
      port map (
@@ -1224,7 +1192,7 @@ U0: entity work.decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4
       clkb => '0',
       dbiterr => NLW_U0_dbiterr_UNCONNECTED,
       deepsleep => '0',
-      dina(31 downto 0) => dina(31 downto 0),
+      dina(31 downto 0) => B"00000000000000000000000000000000",
       dinb(31 downto 0) => B"00000000000000000000000000000000",
       douta(31 downto 0) => douta(31 downto 0),
       doutb(31 downto 0) => NLW_U0_doutb_UNCONNECTED(31 downto 0),
@@ -1274,12 +1242,12 @@ U0: entity work.decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_blk_mem_gen_v8_4_4
       s_axi_wdata(31 downto 0) => B"00000000000000000000000000000000",
       s_axi_wlast => '0',
       s_axi_wready => NLW_U0_s_axi_wready_UNCONNECTED,
-      s_axi_wstrb(3 downto 0) => B"0000",
+      s_axi_wstrb(0) => '0',
       s_axi_wvalid => '0',
       sbiterr => NLW_U0_sbiterr_UNCONNECTED,
       shutdown => '0',
       sleep => '0',
-      wea(3 downto 0) => wea(3 downto 0),
-      web(3 downto 0) => B"0000"
+      wea(0) => '0',
+      web(0) => '0'
     );
 end STRUCTURE;
