@@ -2,3 +2,6 @@ Running: xsim.dir/MiniMIPS32_SYS_tb_behav/xsimk.exe -simmode gui -wdb MiniMIPS32
 Design successfully loaded
 Design Loading Memory Usage: 8076 KB (Peak: 8076 KB)
 Design Loading CPU Usage: 15 ms
+Simulation completed
+Simulation Memory Usage: 17840 KB (Peak: 17840 KB)
+Simulation CPU Usage: 77 ms
