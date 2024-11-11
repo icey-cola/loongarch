@@ -10,11 +10,11 @@ module MiniMIPS32_SYS(
     wire [`INST_ADDR_BUS] iaddr;
     wire                  ice;
     wire [`INST_BUS     ] inst;
-    
-    wire [`INST_ADDR_BUS]  debug_wb_pc;       // 供调试使用的PC值，上板测试时务必删除该信号
-    wire                   debug_wb_rf_wen;   // 供调试使用的PC值，上板测试时务必删除该信号
-    wire [`REG_ADDR_BUS  ] debug_wb_rf_wnum;  // 供调试使用的PC值，上板测试时务必删除该信号
-    wire [`WORD_BUS      ] debug_wb_rf_wdata;  // 供调试使用的PC值，上板测试时务必删除该信号
+    wire                  dce;
+    wire [`INST_ADDR_BUS] daddr;
+    wire [`BSEL_BUS     ] we;
+    wire [`INST_BUS     ] din;
+    wire [`INST_BUS     ] dout;
 
     clkdiv clocking
    (
@@ -38,10 +38,20 @@ module MiniMIPS32_SYS(
         .iaddr(iaddr),
         .ice(ice),
         .inst(inst),
-        .debug_wb_pc(debug_wb_pc),            // 供调试使用的PC值，上板测试时务必删除该信号
-        .debug_wb_rf_wen(debug_wb_rf_wen),    // 供调试使用的PC值，上板测试时务必删除该信号
-        .debug_wb_rf_wnum(debug_wb_rf_wnum),  // 供调试使用的PC值，上板测试时务必删除该信号
-        .debug_wb_rf_wdata(debug_wb_rf_wdata) // 供调试使用的PC值，上板测试时务必删除该信号
+        .dce(dce),
+        .daddr(daddr),
+        .we(we),
+        .din(din),
+        .dm(dout)
+    );
+    
+    data_ram data_ram0 (
+        .clka(cpu_clk_50M),    // input wire clka
+        .ena(dce),      // input wire ena
+        .wea(we),      // input wire [3 : 0] wea
+        .addra(daddr[12:2]),  // input wire [10 : 0] addra
+        .dina(din),    // input wire [31 : 0] dina
+        .douta(dout)  // output wire [31 : 0] douta
     );
 
 endmodule

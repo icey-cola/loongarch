@@ -11,8 +11,12 @@ module idexe_reg (
     input  wire [`REG_BUS      ]  id_src2,
     input  wire [`REG_ADDR_BUS ]  id_wa,
     input  wire                   id_wreg,
-    input  wire [`INST_ADDR_BUS]  id_debug_wb_pc, // 供调试使用的PC值，上板测试时务必删除该信号
-    
+    input  wire [`REG_BUS      ]  id_din,
+    input  wire                   id_whilo,
+    input  wire                   id_mreg,
+    input  wire                   id_whi,
+    input  wire                   id_wlo,
+    input  wire                   id_sext,
     // 送至执行阶段的信息
     output reg  [`ALUTYPE_BUS  ]  exe_alutype,
     output reg  [`ALUOP_BUS    ]  exe_aluop,
@@ -20,7 +24,12 @@ module idexe_reg (
     output reg  [`REG_BUS      ]  exe_src2,
     output reg  [`REG_ADDR_BUS ]  exe_wa,
     output reg                    exe_wreg,
-    output reg  [`INST_ADDR_BUS]  exe_debug_wb_pc  // 供调试使用的PC值，上板测试时务必删除该信号
+    output reg                    exe_mreg,
+    output reg  [`REG_BUS      ]  exe_din,
+    output reg                    exe_whilo,
+    output reg                    exe_whi,
+    output reg                    exe_sext,
+    output reg                    exe_wlo
     );
 
     always @(posedge cpu_clk_50M) begin
@@ -32,7 +41,12 @@ module idexe_reg (
             exe_src2 		   <= `ZERO_WORD;
             exe_wa 			   <= `REG_NOP;
             exe_wreg    	   <= `WRITE_DISABLE;
-            exe_debug_wb_pc    <= `PC_INIT;   // 上板测试时务必删除该语句
+            exe_din            <= `ZERO_WORD;
+            exe_whilo          <= `WRITE_DISABLE;
+            exe_mreg           <= `FALSE_V;
+            exe_whi            <= `FALSE_V;
+            exe_wlo            <= `FALSE_V;
+            exe_sext           <= 1'b0;
         end
         // 将来自译码阶段的信息寄存并送至执行阶段
         else begin
@@ -42,8 +56,12 @@ module idexe_reg (
             exe_src2 		   <= id_src2;
             exe_wa 			   <= id_wa;
             exe_wreg		   <= id_wreg;
-            exe_debug_wb_pc    <= id_debug_wb_pc;   // 上板测试时务必删除该语句
-        end
+            exe_mreg           <= id_mreg;
+            exe_din            <= id_din;
+            exe_whilo          <= id_whilo;
+            exe_whi            <= id_whi;
+            exe_wlo            <= id_wlo;
+            exe_sext           <= id_sext;
     end
-
+    end
 endmodule
