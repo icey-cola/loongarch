@@ -1,12 +1,16 @@
 #include "watchpoint.h"
 #include "expr.h"
-#include <stdlib.h>
+#include "cpu/reg.h"
 
 #define NR_WP 32
 
 static WP wp_pool[NR_WP];
 static WP *head, *free_;
 
+WP* get_head()
+{
+	return head;
+}
 void init_wp_pool() {
 	int i;
 	for(i = 0; i < NR_WP; i ++) {
@@ -19,74 +23,53 @@ void init_wp_pool() {
 	free_ = wp_pool;
 }
 
-static WP* new_WP() {
-	assert(free_ != NULL);
-	WP *p = free_;
-	free_ = free_->next;
-	return p;
-}
+/* TODO: Implement the functionality of watchpoint */
 
-static void free_WP(WP *p) {
-	assert(p >= wp_pool && p < wp_pool + NR_WP);
-	free(p->expr);
-	p->next = free_;
-	free_ = p;
-}
-
-int set_watchpoint(char *e) {
-	uint32_t val;
-	bool success;
-	val = expr(e, &success);
-	if(!success) return -1;
-
-	WP *p = new_WP();
-	p->expr = strdup(e);
-	p->old_val = val;
-
-	p->next = head;
-	head = p;
-
-	return p->NO;
-}
-
-bool delete_watchpoint(int NO) {
-	WP *p, *prev = NULL;
-	for(p = head; p != NULL; prev = p, p = p->next) {
-		if(p->NO == NO) { break; }
+WP* new_wp()
+{
+	WP *wp = free_;
+	if(wp == NULL)
+	{
+		printf("No enough watchpoint.\n");
+		assert(0);
 	}
-
-	if(p == NULL) { return false; }
-	if(prev == NULL) { head = p->next; }
-	else { prev->next = p->next; }
-
-	free_WP(p);
-	return true;
+	free_ = free_->next;
+	wp->next = head;
+	head = wp;
+	return wp;
 }
 
-void list_watchpoint() {
-	if(head == NULL) {
-		printf("No watchpoints\n");
+void free_wp(WP *wp)
+{
+	WP *p = head;
+	if(p == wp)
+	{
+		head = head->next;
+		wp->next = free_;
+		free_ = wp;
 		return;
 	}
-
-	printf("%8s\t%8s\t%8s\n", "NO", "Address", "Enable");
-	WP *p;
-	for(p = head; p != NULL; p = p->next) {
-		printf("%8d\t%s\t%#08x\n", p->NO, p->expr, p->old_val);
-	}
-}
-
-WP* scan_watchpoint() {
-	WP *p;
-	for(p = head; p != NULL; p = p->next) {
-		bool success;
-		p->new_val = expr(p->expr, &success);
-		if(p->old_val != p->new_val) {
-			return p;
+	while(p->next != NULL)
+	{
+		if(p->next == wp)
+		{
+			p->next = wp->next;
+			wp->next = free_;
+			free_ = wp;
+			return;
 		}
+		p = p->next;
 	}
-
-	return NULL;
+	printf("Watchpoint not found.\n");
+	assert(0);
 }
 
-/* TODO: Implement the functionality of watchpoint */
+void print_wp_rcs(WP *wp)
+{
+	if(wp == NULL)
+	{
+		return;
+	}
+	print_wp_rcs(wp->next);
+	printf("%d\t%s\t0x%08x\n", wp->NO, wp->expr, wp->value);
+}

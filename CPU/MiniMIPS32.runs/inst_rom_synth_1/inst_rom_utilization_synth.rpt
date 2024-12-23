@@ -1,8 +1,8 @@
 Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -----------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
-| Date         : Wed Oct 19 16:47:55 2022
-| Host         : DESKTOP-6BSVO40 running 64-bit major release  (build 9200)
+| Date         : Sun Dec  8 14:20:19 2024
+| Host         : Legion-Singer running 64-bit major release  (build 9200)
 | Command      : report_utilization -file inst_rom_utilization_synth.rpt -pb inst_rom_utilization_synth.pb
 | Design       : inst_rom
 | Device       : 7k325tffg900-2

@@ -1,4 +1,4 @@
-// (c) Copyright 1995-2022 Xilinx, Inc. All rights reserved.
+// (c) Copyright 1995-2024 Xilinx, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
@@ -92,8 +92,8 @@ output wire [31 : 0] douta;
     .C_BYTE_SIZE(8),
     .C_ALGORITHM(1),
     .C_PRIM_TYPE(1),
-    .C_LOAD_INIT_FILE(0),
-    .C_INIT_FILE_NAME("no_coe_file_loaded"),
+    .C_LOAD_INIT_FILE(1),
+    .C_INIT_FILE_NAME("data_ram.mif"),
     .C_INIT_FILE("data_ram.mem"),
     .C_USE_DEFAULT_DATA(1),
     .C_DEFAULT_DATA("0"),

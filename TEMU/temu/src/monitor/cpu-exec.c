@@ -1,12 +1,14 @@
 #include "monitor.h"
+#include "watchpoint.h"
 #include "helper.h"
+#include "expr.h"
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
  * This is useful when you use the `si' command.
  * You can modify this value as you want.
  */
-#define MAX_INSTR_TO_PRINT 100
+#define MAX_INSTR_TO_PRINT 10
 
 int temu_state = STOP;
 
@@ -17,13 +19,11 @@ char asm_buf[128];
 
 void print_bin_instr(uint32_t pc) {
 	int i;
-	if(temu_state != END) {
-		int l = sprintf(asm_buf, "%8x:   ", pc);
-		for(i = 3; i >= 0; i --) {
-			l += sprintf(asm_buf + l, "%02x ", instr_fetch(pc + i, 1));
-		}
-		sprintf(asm_buf + l, "%*.s", 8, "");
+	int l = sprintf(asm_buf, "%8x:   ", pc);
+	for(i = 3; i >= 0; i --) {
+		l += sprintf(asm_buf + l, "%02x ", instr_fetch(pc + i, 1)); // little endian
 	}
+	sprintf(asm_buf + l, "%*.s", 8, "");
 }
 
 /* Simulate how the MiniMIPS32 CPU works. */
@@ -62,12 +62,28 @@ void cpu_exec(volatile uint32_t n) {
 		print_bin_instr(pc_temp);
 		strcat(asm_buf, assembly);
 		Log_write("%s\n", asm_buf);
-		if(n_temp < MAX_INSTR_TO_PRINT && temu_state == RUNNING) { // 
+		if(n_temp < MAX_INSTR_TO_PRINT) {
 			printf("%s\n", asm_buf);
 		}
 #endif
 
 		/* TODO: check watchpoints here. */
+		WP *wp = get_head();
+		while(wp != NULL)
+		{
+			bool success = true;
+			uint32_t value = expr(wp->expr, &success);
+			if(value != wp->value)
+			{
+				printf("Hit watchpoint %d at address 0x%08x\n", wp->NO, cpu.pc);
+				printf("Expr: %s\n", wp->expr);
+				printf("Old value: 0x%08x\n", wp->value);
+				printf("New value: 0x%08x\n", value);
+				wp->value = value;
+				temu_state = STOP;
+			}
+			wp = wp->next;
+		}
 
 
 		if(temu_state != RUNNING) { return; }

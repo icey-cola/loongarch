@@ -5,13 +5,15 @@
  */
 #include <sys/types.h>
 #include <regex.h>
-#include <stdlib.h>
 
 enum {
-	NOTYPE = 256, EQ
+	NOTYPE = 256, 				  // Space
+	DEC, HEX, REG,				  // Operand
+	EQ, NEQ, AND, OR,             // Binary operator
+	POS, NEG, DEREF, NOT,         // Unary operator
 
 	/* TODO: Add more token types */
-		, NEQ, OR, AND, NUM, REG, POINTER, NEG
+
 };
 
 static struct rule {
@@ -23,22 +25,25 @@ static struct rule {
 	 * Pay attention to the precedence level of different rules.
 	 */
 
-	{" +",	NOTYPE},				// spaces					
-	{"0x[0-9a-fA-F]{1,8}", NUM},			// hex
-	{"[0-9]{1,10}", NUM},					// dec
-	{"\\$[a-z0-9]{0,31}", REG},				// register names
-	{"\\+", '+'},
-	{"-", '-'},
-	{"\\*", '*'},
-	{"/", '/'},
-	{"%", '%'},
-	{"==", EQ},
-	{"!=", NEQ},
-	{"&&", AND},
-	{"\\|\\|", OR},
-	{"!", '!'},
-	{"\\(", '('},
-	{"\\)", ')'}
+	{" +",	NOTYPE},				// spaces
+
+	// operator                        name                priority 
+	{"\\(", '('},                   // left bracket        1
+	{"\\)", ')'},                   // right bracket
+	{"\\*", '*'},                   // multiply            3
+	{"\\/", '/'},                   // divide 
+	{"\\+", '+'},					// plus                4
+	{"\\-", '-'},                   // minus
+	{"==", EQ},						// equal               6
+	{"!=", NEQ},                    // not equal
+	{"&&", AND},                    // and                 11
+	{"\\|\\|", OR},                 // or
+	{"!", NOT},                     // not
+
+	// operand
+	{"0x[0-9a-fA-F]+", HEX},        // hexadecimal number
+	{"[0-9]+", DEC},                // decimal number
+	{"\\$[A-Za-z0-9]+", REG},       // register
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -84,21 +89,19 @@ static bool make_token(char *e) {
 				char *substr_start = e + position;
 				int substr_len = pmatch.rm_eo;
 
-				// Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i, rules[i].regex, position, substr_len, substr_len, substr_start);
+//				Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i, rules[i].regex, position, substr_len, substr_len, substr_start);
 				position += substr_len;
 
 				/* TODO: Now a new token is recognized with rules[i]. Add codes
 				 * to record the token in the array `tokens'. For certain types
 				 * of tokens, some extra actions should be performed.
 				 */
-				//识别token类型，与规则匹配
-				switch(rules[i].token_type) {
-					case NOTYPE: break;
-					case NUM:
-					case REG: sprintf(tokens[nr_token].str, "%.*s", substr_len, substr_start);
-					default: tokens[nr_token].type = rules[i].token_type;
-							 nr_token ++;
-				}
+
+				tokens[nr_token].type = rules[i].token_type;
+				strncpy(tokens[nr_token].str, substr_start, substr_len);
+				tokens[nr_token].str[substr_len] = '\0';
+//				Log("token[%d].str = %s", nr_token, tokens[nr_token].str);
+				nr_token++;
 
 				break;
 			}
@@ -112,127 +115,153 @@ static bool make_token(char *e) {
 
 	return true; 
 }
-//返回运算token的优先值
-static int op_prec(int t) {
-	switch(t) {
-		case '!': case NEG: case POINTER: return 0;
-		case '*': case '/': case '%': return 1;
-		case '+': case '-': return 2;
-		case EQ: case NEQ: return 4;
-		case AND: return 8;
-		case OR: return 9;
-		default: assert(0);
+
+// stack for brackets matching
+int stack[32], top = -1;
+// brackets matching result
+int match[32];
+
+// check if the operator is unary
+bool is_unary(int i)
+{
+	if(i == 0 || tokens[i - 1].type == '(' || tokens[i - 1].type == '+' || tokens[i - 1].type == '-' || tokens[i - 1].type == '*' || tokens[i - 1].type == '/' 
+		|| tokens[i - 1].type == EQ || tokens[i - 1].type == NEQ || tokens[i - 1].type == AND || tokens[i - 1].type == OR 
+		|| tokens[i - 1].type == NOT || tokens[i - 1].type == DEREF || tokens[i - 1].type == POS || tokens[i - 1].type == NEG)
+	{
+		return true;
 	}
+	return false;
 }
-//比较优先值，优先值越小优先级别越高
-static inline int op_prec_cmp(int t1, int t2) {
-	return op_prec(t1) - op_prec(t2);
-}
-//切分寻找dominate op
-static int find_dominated_op(int s, int e, bool *success) {
-	int i;
-	int cnt = 0;
-	int dominated_op = -1;
-	for(i = s; i <= e; i ++) {
-		switch(tokens[i].type) {
-			case REG: case NUM: break;
-
-			case '(': 
-				cnt ++; 
-				break;
-
-			case ')': 
-				cnt --; 
-				if(cnt < 0) {
-					*success = false;
-					return 0;
-				}
-				break;
-
-			default:
-				if(cnt == 0) {
-					if(dominated_op == -1 || 
-							op_prec_cmp(tokens[dominated_op].type, tokens[i].type) < 0 ||
-							(op_prec_cmp(tokens[dominated_op].type, tokens[i].type) == 0 && 
-							 tokens[i].type != '!' && tokens[i].type != '~' &&
-							 tokens[i].type != NEG && tokens[i].type != POINTER) ) {
-						dominated_op = i;
-					}
-				}
-				break;
-		}
-	}
-
-	*success = (dominated_op != -1);
-	return dominated_op;
-}
-//返回寄存器的值
-uint32_t get_reg_val(const char *, bool *);
-
-//计算表达式的值
-static uint32_t eval(int s, int e, bool *success) {
-	
-	if(s > e) {
-		
-		*success = false;
+uint32_t eval(int p, int q, bool *success)
+{
+	if(p > q)
+	{
+		// Bad expression
+		*success &= false;
 		return 0;
 	}
-	   //s==e，此时一定是非运算性token
-	else if(s == e) {
-		
-		uint32_t val;
-		switch(tokens[s].type) {
-			case REG: 
-					  val = get_reg_val(tokens[s].str, success);	
-					  if(!*success) { return 0; }
-					  break;
-
-			case NUM: val = strtol(tokens[s].str, NULL, 0); break;
-
-			default: assert(0);
+	else if(p == q)
+	{
+		// Single token
+		uint32_t num;
+		if(tokens[p].type == DEC)
+		{
+			sscanf(tokens[p].str, "%u", &num);
 		}
-
-		*success = true;
-		return val;
+		else if(tokens[p].type == HEX)
+		{
+			if(tokens[p].str != NULL)
+				Log("hex found: %s", tokens[p].str);
+			sscanf(tokens[p].str, "%x", &num);
+		}
+		else if(tokens[p].type == REG)
+		{
+			// Register
+			if(tokens[p].str != NULL)
+				Log("reg found: %s", tokens[p].str);
+			int i;
+			for(i = 0; i < 32; i++)
+			{
+				if(strcmp(tokens[p].str, regfile[i]) == 0)
+				{
+					num = reg_w(i);
+					break;
+				}
+			}
+			if(i == 32)
+			{
+				// Bad expression
+				*success &= false;
+				num = 0;
+			}
+		}
+		else
+		{
+			// Bad expression
+			*success &= false;
+			num = 0;
+		}
+		return num;
 	}
-	//表达式左右两端被括号括起，递归计算子表达式
-	else if(tokens[s].type == '(' && tokens[e].type == ')') {
-		return eval(s + 1, e - 1, success);
+	else if(tokens[p].type == '(' && tokens[q].type == ')' && match[p] == q)
+	{
+		// Remove the outermost brackets
+		return eval(p + 1, q - 1, success);
 	}
-	//通过dominate token切分
-	else {
-		int dominated_op = find_dominated_op(s, e, success);
-		if(!*success) { return 0; }
-
-		int op_type = tokens[dominated_op].type;
-		if(op_type == '!' || op_type == NEG || op_type == POINTER) {
-			uint32_t val = eval(dominated_op + 1, e, success);
-			if(!*success) { return 0; }
-
-			switch(op_type) {
-				case '!': return !val;
-				case NEG: return -val;
-				case POINTER: return mem_read(val, 4);
-				default: assert(0);
+	else
+	{
+		// Find the dominant operator
+		int mxpr = -1, mxi = p, cnt = 0, i;
+		for(i = p; i <= q; ++i)
+		{
+			if(tokens[i].type == '(')
+			{
+				++cnt;
+			}
+			else if(tokens[i].type == ')')
+			{
+				--cnt;
+			}
+			else if(cnt == 0)
+			{
+				if(mxpr <= 11 && (tokens[i].type == AND || tokens[i].type == OR))
+				{
+					mxpr = 11;
+					mxi = i;
+				}
+				else if(mxpr <= 6 && (tokens[i].type == EQ || tokens[i].type == NEQ))
+				{
+					mxpr = 6;
+					mxi = i;
+				}
+				else if(mxpr <= 4 && (tokens[i].type == '+' || tokens[i].type == '-' ))
+				{
+					mxpr = 4;
+					mxi = i;
+				}
+				else if(mxpr <= 3 && (tokens[i].type == '*' || tokens[i].type == '/'))
+				{
+					mxpr = 3;
+					mxi = i;
+				}
 			}
 		}
 
-		uint32_t val1 = eval(s, dominated_op - 1, success);
-		if(!*success) { return 0; }
-		uint32_t val2 = eval(dominated_op + 1, e, success);
-		if(!*success) { return 0; }
+		if(mxpr == -1)
+		{
+			// Dominant operator not found
+			if(is_unary(p))
+			{
+				// Unary operator
+				uint32_t val = eval(p + 1, q, success);
+				switch(tokens[p].type)
+				{
+					case POS: return val;
+					case NEG: return -val;
+					case DEREF: return mem_read(val, 4);
+					case NOT: return !val;
+				}
+			}
+			// Bad expression
+			*success &= false;
+			return 0;
+		}
 
-		switch(op_type) {
+		// Calculate the value of the dominant operator
+		uint32_t val1 = eval(p, mxi - 1, success);
+		uint32_t val2 = eval(mxi + 1, q, success);
+		switch(tokens[mxi].type)
+		{
 			case '+': return val1 + val2;
 			case '-': return val1 - val2;
 			case '*': return val1 * val2;
 			case '/': return val1 / val2;
-			case '%': return val1 % val2;
 			case EQ: return val1 == val2;
 			case NEQ: return val1 != val2;
 			case AND: return val1 && val2;
 			case OR: return val1 || val2;
-			default: assert(0);
+			// Bad expression
+			default: *success &= false; return 0;
 		}
 	}
 }
@@ -243,37 +272,68 @@ uint32_t expr(char *e, bool *success) {
 		return 0;
 	}
 
-
+	/* TODO: Insert codes to evaluate the expression. */
 	int i;
-	int prev_type;
-	//或许这段判断加在make_token()中才合理，但最终还是参考NEMU中的结构
-	for(i = 0; i < nr_token; i ++) {
-		if(tokens[i].type == '-') {
-			if(i == 0) {
-				tokens[i].type = NEG;
-				continue;
-			}
 
-			prev_type = tokens[i - 1].type;
-			if( !(prev_type == ')'  || prev_type == NUM || 
-						prev_type == REG) ) {
-				tokens[i].type = NEG;
+	// Delete spaces
+	for(i = 0; i < nr_token; i++)
+	{
+		if(tokens[i].type == NOTYPE)
+		{
+			int j;
+			for(j = i; j < nr_token - 1; j++)
+			{
+				tokens[j] = tokens[j + 1];
 			}
-		}
-
-		else if(tokens[i].type == '*') {
-			if(i == 0) {
-				tokens[i].type = POINTER;
-				continue;
-			}
-
-			prev_type = tokens[i - 1].type;
-			if( !(prev_type == ')' || prev_type == NUM || 
-						prev_type == REG) ) {
-				tokens[i].type = POINTER;
-			}
+			nr_token--;
+			i--;
 		}
 	}
 
+	// Detect unary operator
+	for(i = 0; i < nr_token; i++) if(is_unary(i))
+	{
+		switch (tokens[i].type)
+		{
+			case '+': tokens[i].type = POS; break;
+			case '-': tokens[i].type = NEG; break;
+			case '*': tokens[i].type = DEREF; break;
+			case '!': tokens[i].type = NOT; break;
+		}
+	}
+
+	// brackets matching
+	top = -1;
+	for(i = 0; i < nr_token; i++)
+	{
+		stack[i] = match[i] = -1;
+	}
+	for(i = 0; i < nr_token; i++)
+	{
+		if(tokens[i].type == '(')
+		{
+			stack[++top] = i;
+		}
+		else if(tokens[i].type == ')')
+		{
+			if(top == -1)
+			{
+				// Bad expression
+				*success = false;
+				return 0;
+			}
+			match[stack[top--]] = i;
+		}
+	}
+	if(top != -1)
+	{
+		// Bad expression
+		*success = false;
+		return 0;
+	}
+
+	// Validate and calculate expression
+	*success = true;
 	return eval(0, nr_token - 1, success);
 }
+

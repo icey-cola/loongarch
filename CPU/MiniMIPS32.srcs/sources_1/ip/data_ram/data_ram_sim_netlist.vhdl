@@ -1,10 +1,10 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
--- Date        : Wed Oct 19 16:51:48 2022
--- Host        : DESKTOP-6BSVO40 running 64-bit major release  (build 9200)
+-- Date        : Sun Dec  8 14:21:09 2024
+-- Host        : Legion-Singer running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
---               E:/mips_pro/computer-organization-and-design/MiniMIPS32.srcs/sources_1/ip/data_ram/data_ram_sim_netlist.vhdl
+--               E:/Labs/COAProj/MiniMIPS32_Ri/CPU/MiniMIPS32.srcs/sources_1/ip/data_ram/data_ram_sim_netlist.vhdl
 -- Design      : data_ram
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -825,11 +825,11 @@ entity data_ram_blk_mem_gen_v8_4_4 is
   attribute C_INIT_FILE : string;
   attribute C_INIT_FILE of data_ram_blk_mem_gen_v8_4_4 : entity is "data_ram.mem";
   attribute C_INIT_FILE_NAME : string;
-  attribute C_INIT_FILE_NAME of data_ram_blk_mem_gen_v8_4_4 : entity is "no_coe_file_loaded";
+  attribute C_INIT_FILE_NAME of data_ram_blk_mem_gen_v8_4_4 : entity is "data_ram.mif";
   attribute C_INTERFACE_TYPE : integer;
   attribute C_INTERFACE_TYPE of data_ram_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_LOAD_INIT_FILE : integer;
-  attribute C_LOAD_INIT_FILE of data_ram_blk_mem_gen_v8_4_4 : entity is 0;
+  attribute C_LOAD_INIT_FILE of data_ram_blk_mem_gen_v8_4_4 : entity is 1;
   attribute C_MEM_TYPE : integer;
   attribute C_MEM_TYPE of data_ram_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_MUX_PIPELINE_STAGES : integer;
@@ -1152,11 +1152,11 @@ architecture STRUCTURE of data_ram is
   attribute C_INIT_FILE : string;
   attribute C_INIT_FILE of U0 : label is "data_ram.mem";
   attribute C_INIT_FILE_NAME : string;
-  attribute C_INIT_FILE_NAME of U0 : label is "no_coe_file_loaded";
+  attribute C_INIT_FILE_NAME of U0 : label is "data_ram.mif";
   attribute C_INTERFACE_TYPE : integer;
   attribute C_INTERFACE_TYPE of U0 : label is 0;
   attribute C_LOAD_INIT_FILE : integer;
-  attribute C_LOAD_INIT_FILE of U0 : label is 0;
+  attribute C_LOAD_INIT_FILE of U0 : label is 1;
   attribute C_MEM_TYPE : integer;
   attribute C_MEM_TYPE of U0 : label is 0;
   attribute C_MUX_PIPELINE_STAGES : integer;
